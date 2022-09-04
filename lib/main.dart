@@ -1,18 +1,18 @@
+import 'package:arda/screen/aramaScreen.dart';
+import 'package:arda/screen/mainScreen.dart';
 import 'package:flutter/material.dart';
-import 'package:arda/widget/fbStory.dart';
+import 'package:flutter/cupertino.dart';
 
-void main() {
-  runApp(const MyApp());
-}
+void main() => runApp(MainApp());
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+class MainApp extends StatelessWidget {
+  const MainApp({Key? key}) : super(key: key);
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      // title: 'Flutter Demo',
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -25,54 +25,105 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: HomePage(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
+class HomePage extends StatefulWidget {
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  _HomePageState createState() => _HomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class _HomePageState extends State<HomePage> {
+  int _currentIndex = 2;
+  List<Widget> _pages = <Widget>[];
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
+  @override
+  void initState() {
+    _pages.add(aramaScreen());
+    _pages.add(SettingScreen());
+    _pages.add(mainScreen());
+    _pages.add(SettingScreen());
+    _pages.add(SettingScreen());
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
-        body:
-            fbStoryItem() // This trailing comma makes auto-formatting nicer for build methods.
-        );
+      // appBar: AppBar(title: Text('BottomNavigationBar')),
+      body: _pages[_currentIndex],
+      bottomNavigationBar: BottomAppBar(
+        shape: CircularNotchedRectangle(),
+        notchMargin: 8.0,
+        clipBehavior: Clip.antiAlias,
+        child: Container(
+          height: kBottomNavigationBarHeight,
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border(
+                top: BorderSide(
+                  color: Colors.grey,
+                  width: 0.5,
+                ),
+              ),
+            ),
+            child: BottomNavigationBar(
+                showSelectedLabels: false,
+                showUnselectedLabels: false,
+                currentIndex: _currentIndex,
+                unselectedItemColor: Color(0xffc7c8ca),
+                selectedItemColor: Color(0xff00c9d1),
+                onTap: (index) {
+                  setState(() {
+                    _currentIndex = index;
+                  });
+                },
+                items: [
+                  BottomNavigationBarItem(
+                    activeIcon: Icon(
+                      Icons.apps,
+                      size: 25.5,
+                    ),
+                    label: '',
+                    icon: Icon(Icons.format_align_left),
+                  ),
+                  BottomNavigationBarItem(
+                      icon: Icon(Icons.pin_drop_outlined), label: ''),
+                  BottomNavigationBarItem(
+                      icon: Icon(Icons.settings_outlined), label: ''),
+                  BottomNavigationBarItem(
+                      icon: Icon(CupertinoIcons.heart), label: ''),
+                  BottomNavigationBarItem(icon: Icon(Icons.person), label: ''),
+                ]),
+          ),
+        ),
+      ),
+      floatingActionButtonLocation:
+          FloatingActionButtonLocation.miniCenterDocked,
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: FloatingActionButton(
+          backgroundColor: Colors.white,
+          child: new Image.asset('images/haliliye.png'),
+          onPressed: () => setState(() {
+            _currentIndex = 2;
+          }),
+        ),
+      ),
+    );
+  }
+}
+
+class SettingScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      height: double.infinity,
+      child: Center(child: Text('Settings')),
+    );
   }
 }
